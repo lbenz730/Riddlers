@@ -9,7 +9,7 @@ is_multiple <- function(a, b) {
   return(a/b == round(a/b))
 }
 
-sims <- 1000000
+sims <- 10000000
 lens <- rep(NA, sims)
 for(i in 1:sims) {
   print(i)
