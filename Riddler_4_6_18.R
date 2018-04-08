@@ -29,10 +29,10 @@ y <- filter(x, scorediff > 0) %>% select(team, opponent)
 win_network <- graph.data.frame(y, directed = T)
 is.connected(win_network, mode = "strong")
 E(win_network)$arrow.size <- 0.01
-plot(win_network, vertex.label.cex = 0.3, vertex.size = 5, vertex.color = "orange")
-is.connected(win_network)
+cols <- c(rep("orange", 328), "navy", rep("orange", 32))
+plot(win_network, vertex.label.cex = 0.3, vertex.size = 5, vertex.color = cols)
 
 ### Degress of Seperation from Villanova
 plot(unlist(lapply(degrees_of_seperation, length)[1:6]), type = "l", lwd = 3, col = "orange",
-     xlab = "Transitive National Champions", ylab = "Degrees of Seperation from Villanova",
+     ylab = "Transitive National Champions", xlab = "Degrees of Seperation from Villanova",
      main = "2017-18 Transitive National Champions")
