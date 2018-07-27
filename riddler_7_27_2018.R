@@ -6,36 +6,36 @@
 move_coord <- function(move_type, x, y) {
   coordinates <- list("x" = vector(), "y" = vector())
   if(move_type == "left") {
-    coordinates$x <- x - 1:3
-    coordinates$y <- rep(y, 3)
+    coordinates$x <- x - 3
+    coordinates$y <- y
   }
   else if(move_type == "right") {
-    coordinates$x <- x + 1:3
-    coordinates$y <- rep(y, 3)
+    coordinates$x <- x + 3
+    coordinates$y <- rep(y, 1)
   }
   else if(move_type == "up") {
-    coordinates$x <- rep(x, 3)
-    coordinates$y <- y + 1:3
+    coordinates$x <- rep(x, 1)
+    coordinates$y <- y + 3
   }
   else if(move_type == "down") {
-    coordinates$x <- rep(x, 3)
-    coordinates$y <- y - 1:3
+    coordinates$x <- rep(x, 1)
+    coordinates$y <- y - 3
   }
   else if(move_type == "up_right") {
-    coordinates$x <- x + 1:2
-    coordinates$y <- y + 1:2
+    coordinates$x <- x + 2
+    coordinates$y <- y + 2
   }
   else if(move_type == "up_left") {
-    coordinates$x <- x - 1:2
-    coordinates$y <- y + 1:2
+    coordinates$x <- x - 2
+    coordinates$y <- y + 2
   }
   else if(move_type == "down_right") {
-    coordinates$x <- x + 1:2
-    coordinates$y <- y - 1:2
+    coordinates$x <- x + 2
+    coordinates$y <- y - 2
   }  
   else if(move_type == "down_left") {
-    coordinates$x <- x - 1:2
-    coordinates$y <- y - 1:2
+    coordinates$x <- x - 2
+    coordinates$y <- y - 2
   }
   return(coordinates)
 }
@@ -74,7 +74,7 @@ blank <- c()
 fails <- 0
 
 ### Square Size
-n <- 5
+n <- 6
 
 moves <- c("left", "right", "up", "down", "up_right", 
            "up_left", "down_right", "down_left")
@@ -111,9 +111,6 @@ while(any(!grid)) {
   }
   else{
     fails <- fails + 1
-    if(sum(!grid) == 4) {
-      break
-    }
     blank <- c(blank, sum(!grid))
     if(fails %% 100 == 0) {
       print(paste("Fails:", fails))
@@ -141,7 +138,7 @@ frame$move <- 0
 frame$covered <- F
 frame$covered[frame$x == xmoves[1] &frame$y == ymoves[1]] <- T
 all_frames <- frame
-for(i in 1:length(moves)) {
+for(i in 1:length(moves_used)) {
   frame$move <- i
   coordinates <- move_coord(moves_used[i], xmoves[i], ymoves[i])
   for(k in 1:length(coordinates$x)) {
@@ -155,13 +152,23 @@ for(i in 1:length(moves)) {
 library(ggplot2)
 library(dplyr)
 
-pdf("riddler.pdf")
-for(i in 0:8) {
+pdf("riddler6.pdf")
+for(i in 0:length(moves_used)) {
+  if(i == length(moves_used)) {
+    p <- ggplot(filter(all_frames, move == i), aes(x = x, y = y, fill = covered)) + 
+      geom_raster() + scale_fill_manual("Visited", values = c("aquamarine1")) + 
+      geom_vline(xintercept = 0.5 + 1:(n-1), color = "black", size = 1.2) + 
+      geom_hline(yintercept = 0.5 + 1:(n-1), color = "black", size = 1.2) +
+      labs(x = "X", y = "Y", title = paste("Move (Hop):", i))
+    
+  }
+  else{
   p <- ggplot(filter(all_frames, move == i), aes(x = x, y = y, fill = covered)) + 
     geom_raster() + scale_fill_manual("Visited", values = c("white", "aquamarine1")) + 
-    geom_vline(xintercept = 0.5 + 1:4, color = "black", size = 1.2) + 
-    geom_hline(yintercept = 0.5 + 1:4, color = "black", size = 1.2) +
-    labs(x = "X", y = "Y", title = paste("Move:", i))
+    geom_vline(xintercept = 0.5 + 1:(n-1), color = "black", size = 1.2) + 
+    geom_hline(yintercept = 0.5 + 1:(n-1), color = "black", size = 1.2) +
+    labs(x = "X", y = "Y", title = paste("Move (Hop):", i))
+  }
   print(p)
 }
 dev.off()
