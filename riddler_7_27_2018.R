@@ -74,7 +74,7 @@ blank <- c()
 fails <- 0
 
 ### Square Size
-n <- 6
+n <- 5
 
 moves <- c("left", "right", "up", "down", "up_right", 
            "up_left", "down_right", "down_left")
@@ -152,7 +152,7 @@ for(i in 1:length(moves_used)) {
 library(ggplot2)
 library(dplyr)
 
-pdf("riddler6.pdf")
+pdf("riddler.pdf")
 for(i in 0:length(moves_used)) {
   if(i == length(moves_used)) {
     p <- ggplot(filter(all_frames, move == i), aes(x = x, y = y, fill = covered)) + 
